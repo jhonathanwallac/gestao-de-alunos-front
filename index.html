@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão Acadêmica - Alunos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Jost', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .header {
+            background-color: #28F1A7;
+            color: black;
+            padding: 10px 20px;
+        }
+        .header h1 {
+            font-size: 1.25em;
+            margin: 0;
+        }
+        h2 {
+            font-size: 1rem;
+            margin-right: 20px;
+        }
+        .container-cadastrar-aluno, .container-listagem-alunos {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .container-cadastrar-aluno form > div:first-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .cadastro-aluno, .listagem-aluno {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #28F1A7;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        .student-list {
+            margin-top: 20px;
+        }
+        .student-info {
+            white-space: nowrap;
+        }
+        .student-list > div:first-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .student-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .student-actions {
+            display: flex;
+            gap: 15px;
+            padding-left: 10px;
+        }
+        .action-icon {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2em;
+        }
+        .student-list-container {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        button:hover {
+            background-color: #1EE79D;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        @media (max-width: 600px) {
+            .student-info {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Sistema de Gestão Acadêmica - Alunos</h1>
+    </header>
+
+    <main>
+        <section class="cadastro-aluno">
+            <div class="container-cadastrar-aluno">
+                <form id="student-form">
+                    <div>
+                        <h2>Cadastrar aluno</h2>
+                        <button type="submit">Cadastrar aluno <i class="bi bi-person-add"></i></button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Nome*</label>
+                        <input type="text" id="name" name="name" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdate">Data nasc.*</label>
+                        <input type="date" id="birthdate" name="birthdate" required autocomplete="bday">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email*</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Curso*</label>
+                        <select id="course" name="course" required>
+                            <option value="" disabled selected>Selecione um curso</option>
+                            <option value="Análise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas</option>
+                            <option value="Sistemas de Informação">Sistemas de Informação</option>
+                            <option value="Engenharia da Computação">Engenharia da Computação</option>
+                            <option value="Ciência da Computação">Ciência da Computação</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="listagem-aluno">
+            <div class="container-listagem-alunos">
+                <div class="student-list">
+                    <div>
+                        <h2>Listagem de alunos</h2>
+                        <button id="update-list-button" class="update-button">Atualizar Lista <i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+
+                    <div id="student-list-container" class="student-list-container">
+                        <div class="student-item">
+                            
+                        </div>
+
+                        <div class="student-item">
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+      document.getElementById('student-form').addEventListener('submit', function(event) {
+          event.preventDefault(); // Impede o envio padrão do formulário
+      
+          const formData = new FormData(this);
+          const student = {
+              name: formData.get('name'),
+              data_nasc: formData.get('birthdate'),
+              email: formData.get('email'),
+              course: formData.get('course')
+          };
+      
+          fetch('http://localhost:8080/students', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(student)
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Aluno cadastrado:', data);
+              alert('Aluno cadastrado com sucesso!');
+              document.getElementById('student-form').reset(); // Limpa o formulário após o envio
+              loadStudents(); // Atualiza a lista de alunos
+          })
+          .catch(error => {
+              console.error('Erro ao cadastrar aluno:', error);
+              alert('Erro ao cadastrar aluno.');
+          });
+      });
+      </script>
+      <script>
+        function loadStudents() {
+            fetch('http://localhost:8080/students')
+            .then(response => response.json())
+            .then(students => {
+                const listContainer = document.getElementById('student-list-container');
+                listContainer.innerHTML = ''; // Limpa a lista existente
+                students.forEach(student => {
+                    const studentItem = document.createElement('div');
+                    studentItem.classList.add('student-item');
+                    studentItem.innerHTML = `
+                        <div class="student-info">
+                            <p><strong>Matrícula: </strong>${student.id}</p>
+                            <p><strong>Nome: </strong>${student.name}</p>
+                            <p><strong>Data nasc.: </strong>${new Date(student.data_nasc).toLocaleDateString()}</p>
+                            <p><strong>Email: </strong>${student.email}</p>
+                            <p><strong>Curso: </strong>${student.course}</p>
+                        </div>
+                        <div class="student-actions">
+                            <i class="bi bi-pencil action-icon" aria-label="Editar aluno" style="color: #4B77D1;"></i>
+                            <i class="bi bi-trash action-icon" aria-label="Excluir aluno" style="color: #BB271A;"></i>
+                        </div>
+                    `;
+                    listContainer.appendChild(studentItem);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar alunos:', error);
+                alert('Erro ao carregar lista de alunos.');
+            });
+        }
+        
+        // Carrega a lista de alunos ao carregar a página
+        document.addEventListener('DOMContentLoaded', loadStudents);
+        
+        // Atualiza a lista quando o botão é clicado
+        document.getElementById('update-list-button').addEventListener('click', loadStudents);
+        </script>
+        
+</body>
+</html>
